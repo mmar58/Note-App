@@ -14,7 +14,6 @@ import { RESET_CSS } from '@/constants/resetCSS'
 import { themeActions } from '@/theme/theme'
 import { hasExtension } from '@/utils/utils'
 import { removeCSS, updateCSS } from '@/utils/dynamicCSS'
-
 import CharactorCount from '@/components/CharactorCount'
 import { editableEditorActions } from '@/store/editableEditor'
 

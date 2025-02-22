@@ -1,9 +1,9 @@
-"use client"
-import { useCallback, useState } from 'react'
-
-import RichTextEditor from '@/components/RichTextEditor'
-import locale from '@/locales'
-import { Attachment,
+"use client";
+import { useCallback, useState } from "react";
+import RichTextEditor from "@/components/RichTextEditor";
+import locale from "@/locales";
+import {
+  Attachment,
   BaseKit,
   Blockquote,
   Bold,
@@ -47,18 +47,19 @@ import { Attachment,
   TextDirection,
   Twitter,
   Underline,
-  Video, } from '@/extensions'
+  Video,
+} from "@/extensions";
 
 function convertBase64ToBlob(base64: string) {
-  const arr = base64.split(',')
-  const mime = arr[0].match(/:(.*?);/)![1]
-  const bstr = atob(arr[1])
-  let n = bstr.length
-  const u8arr = new Uint8Array(n)
+  const arr = base64.split(",");
+  const mime = arr[0].match(/:(.*?);/)![1];
+  const bstr = atob(arr[1]);
+  let n = bstr.length;
+  const u8arr = new Uint8Array(n);
   while (n--) {
-    u8arr[n] = bstr.charCodeAt(n)
+    u8arr[n] = bstr.charCodeAt(n);
   }
-  return new Blob([u8arr], { type: mime })
+  return new Blob([u8arr], { type: mime });
 }
 
 const extensions = [
@@ -89,7 +90,7 @@ const extensions = [
   Highlight,
   BulletList,
   OrderedList,
-  TextAlign.configure({ types: ['heading', 'paragraph'], spacer: true }),
+  TextAlign.configure({ types: ["heading", "paragraph"], spacer: true }),
   Indent,
   LineHeight,
   TaskList.configure({
@@ -103,18 +104,18 @@ const extensions = [
     upload: (files: File) => {
       return new Promise((resolve) => {
         setTimeout(() => {
-          resolve(URL.createObjectURL(files))
-        }, 500)
-      })
+          resolve(URL.createObjectURL(files));
+        }, 500);
+      });
     },
   }),
   Video.configure({
     upload: (files: File) => {
       return new Promise((resolve) => {
         setTimeout(() => {
-          resolve(URL.createObjectURL(files))
-        }, 500)
-      })
+          resolve(URL.createObjectURL(files));
+        }, 500);
+      });
     },
   }),
   ImageGif.configure({
@@ -126,18 +127,18 @@ const extensions = [
   Code.configure({
     toolbar: false,
   }),
-  CodeBlock.configure({ defaultTheme: 'dracula' }),
+  CodeBlock.configure({ defaultTheme: "dracula" }),
   ColumnActionButton,
   Table,
   Iframe,
   ExportPdf.configure({ spacer: true }),
   ImportWord.configure({
     upload: (files: File[]) => {
-      const f = files.map(file => ({
+      const f = files.map((file) => ({
         src: URL.createObjectURL(file),
         alt: file.name,
-      }))
-      return Promise.resolve(f)
+      }));
+      return Promise.resolve(f);
     },
   }),
   ExportWord,
@@ -146,94 +147,115 @@ const extensions = [
   Mention,
   Attachment.configure({
     upload: (file: any) => {
-      // fake upload return base 64
-      const reader = new FileReader()
-      reader.readAsDataURL(file)
-
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
       return new Promise((resolve) => {
         setTimeout(() => {
-          const blob = convertBase64ToBlob(reader.result as string)
-          resolve(URL.createObjectURL(blob))
-        }, 300)
-      })
+          const blob = convertBase64ToBlob(reader.result as string);
+          resolve(URL.createObjectURL(blob));
+        }, 300);
+      });
     },
   }),
   Mermaid.configure({
     upload: (file: any) => {
-      // fake upload return base 64
-      const reader = new FileReader()
-      reader.readAsDataURL(file)
-
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
       return new Promise((resolve) => {
         setTimeout(() => {
-          const blob = convertBase64ToBlob(reader.result as string)
-          resolve(URL.createObjectURL(blob))
-        }, 300)
-      })
+          const blob = convertBase64ToBlob(reader.result as string);
+          resolve(URL.createObjectURL(blob));
+        }, 300);
+      });
     },
   }),
   Twitter,
-]
+];
 
-const DEFAULT = `<p dir="auto"></p><p dir="auto"></p><p dir="auto"></p><p dir="auto"><div style="text-align: center;" class="image"><img height="auto" style="transform: rotateX(0deg) rotateY(180deg);" src="https://cdn.hashnode.com/res/hashnode/image/upload/v1729198819038/684c0adb-b189-4af8-b9d8-d26e4097ce27.png?auto=compress,format&amp;format=webp" flipx="false" flipy="true" align="center" inline="false"></div></p><p dir="auto"></p><p dir="auto"></p><p dir="auto"></p>`
+const DEFAULT = `<p dir="auto"></p><p dir="auto"></p><p dir="auto"></p><p dir="auto"><div style="text-align: center;" class="image"><img height="auto" style="transform: rotateX(0deg) rotateY(180deg);" src="https://cdn.hashnode.com/res/hashnode/image/upload/v1729198819038/684c0adb-b189-4af8-b9d8-d26e4097ce27.png?auto=compress,format&amp;format=webp" flipx="false" flipy="true" align="center" inline="false"></div></p><p dir="auto"></p><p dir="auto"></p><p dir="auto"></p>`;
 
 function debounce(func: any, wait: number) {
-  let timeout: NodeJS.Timeout
+  let timeout: NodeJS.Timeout;
   return function (...args: any[]) {
-    clearTimeout(timeout)
-    // @ts-ignore
-    timeout = setTimeout(() => func.apply(this, args), wait)
-  }
+    clearTimeout(timeout);
+    timeout = setTimeout(() => func.apply(this, args), wait);
+  };
 }
 
 function App() {
-  const [content, setContent] = useState(DEFAULT)
-  const [theme, setTheme] = useState('light')
-  const [disable, setDisable] = useState(false)
+  const [content, setContent] = useState(DEFAULT);
+  const [theme, setTheme] = useState("light");
+  const [disable, setDisable] = useState(false);
 
   const onValueChange = useCallback(
     debounce((value: any) => {
-      setContent(value)
+      setContent(value);
     }, 300),
-    [],
-  )
+    []
+  );
+
   return (
     <div
-      className="p-[24px] flex flex-col w-full max-w-screen-lg gap-[24px] mx-[auto] my-0"
+      className="p-[24px] flex flex-col w-full max-w-screen-lg gap-[16px] mx-auto my-0"
       style={{
         maxWidth: 1024,
-        margin: '40px auto',
+        margin: "40px auto",
       }}
     >
+      {/* BUTTON TOOLBAR */}
       <div
         style={{
-          display: 'flex',
-          gap: '12px',
-          marginTop: '100px',
-          marginBottom: 10,
+          display: "flex",
+          gap: "12px",
+          marginTop: "50px",
+          marginBottom: "10px",
+          justifyContent: "center",
+          flexWrap: "wrap",
         }}
       >
-        <button type="button" onClick={() => locale.setLang('vi')}>Vietnamese</button>
-        <button type="button" onClick={() => locale.setLang('en')}>English</button>
-        <button type="button" onClick={() => locale.setLang('zh_CN')}>Chinese</button>
-        <button type="button" onClick={() => locale.setLang('pt_BR')}>Português</button>
-        <button type="button" onClick={() => locale.setLang('hu_HU')}>Hungarian</button>
-        <button type="button" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}>
-          {theme === 'dark' ? 'Light' : 'Dark'}
+        {["Vietnamese", "English", "Chinese", "Português", "Hungarian"].map(
+          (lang, index) => (
+            <button
+              key={index}
+              type="button"
+              style={{
+                background: "#ddd",
+                padding: "8px 16px",
+                borderRadius: "6px",
+                border: "none",
+                cursor: "pointer",
+              }}
+              onClick={() => locale.setLang(lang.toLowerCase())}
+            >
+              {lang}
+            </button>
+          )
+        )}
+        <button
+          type="button"
+          onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+        >
+          {theme === "dark" ? "Light" : "Dark"}
         </button>
-        <button type="button" onClick={() => setDisable(!disable)}>{disable ? 'Editable' : 'Readonly'}</button>
+        <button type="button" onClick={() => setDisable(!disable)}>
+          {disable ? "Editable" : "Readonly"}
+        </button>
+        <button type="button">Source Demo</button>
+        <button type="button">Documentation</button>
       </div>
 
+      {/* RICH TEXT EDITOR */}
       <RichTextEditor
         output="html"
         content={content as any}
         onChangeContent={onValueChange}
         extensions={extensions}
-        dark={theme === 'dark'}
+        dark={theme === "dark"}
         disabled={disable}
       />
 
-      {typeof content === 'string' && (
+      {/* CONTENT OUTPUT */}
+      {typeof content === "string" && (
         <textarea
           style={{
             marginTop: 20,
@@ -244,7 +266,7 @@ function App() {
         />
       )}
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
