@@ -3,30 +3,15 @@ import type { LinkOptions as TiptapLinkOptions } from '@tiptap/extension-link'
 import { Link as TiptapLink } from '@tiptap/extension-link'
 import { Plugin, TextSelection } from '@tiptap/pm/state'
 import type { EditorView } from '@tiptap/pm/view'
+import { Extension } from "@tiptap/core";
 
-import LinkEditPopover from '@/extensions/Link/components/LinkEditPopover'
+import LinkEditPopover from '@/extensions/Ollama/components/LinkEditPopover'
 import type { GeneralOptions } from '@/types'
 
 export interface LinkOptions extends TiptapLinkOptions, GeneralOptions<LinkOptions> {}
 
-export const Link = TiptapLink.extend<LinkOptions>({
+export const Ollama = Extension.create({
   inclusive: false,
-  parseHTML() {
-    return [
-      {
-        tag: 'a[href]:not([data-type="button"]):not([href *= "javascript:" i])',
-      },
-    ]
-  },
-  renderHTML({ HTMLAttributes }) {
-    return [
-      'a',
-      mergeAttributes(this.options.HTMLAttributes, HTMLAttributes, {
-        class: 'link',
-      }),
-      0,
-    ]
-  },
 
   addOptions() {
     return {
@@ -59,34 +44,34 @@ export const Link = TiptapLink.extend<LinkOptions>({
                 .focus()
                 .run()
             },
-            id: 'linkk',
+            id: 'ollama',
             isActive: () => editor.isActive('link') || false,
             disabled: !editor.can().setLink({ href: '' }),
-            icon: 'Link',
-            tooltip: "Link",
+            icon: 'EmojiIcon',
+            tooltip: "Generate with ollama",
           },
         }
       },
     }
   },
 
-  addProseMirrorPlugins() {
-    return [
-      new Plugin({
-        props: {
-          handleClick: (view: EditorView, pos: number) => {
-            const { schema, doc, tr } = view.state
-            const range = getMarkRange(doc.resolve(pos), schema.marks.link)
-            if (!range) {
-              return false
-            }
-            const $start = doc.resolve(range.from)
-            const $end = doc.resolve(range.to)
-            const transaction = tr.setSelection(new TextSelection($start, $end))
-            view.dispatch(transaction)
-          },
-        },
-      }),
-    ]
-  },
+  // addProseMirrorPlugins() {
+  //   return [
+  //     new Plugin({
+  //       props: {
+  //         handleClick: (view: EditorView, pos: number) => {
+  //           const { schema, doc, tr } = view.state
+  //           const range = getMarkRange(doc.resolve(pos), schema.marks.link)
+  //           if (!range) {
+  //             return false
+  //           }
+  //           const $start = doc.resolve(range.from)
+  //           const $end = doc.resolve(range.to)
+  //           const transaction = tr.setSelection(new TextSelection($start, $end))
+  //           view.dispatch(transaction)
+  //         },
+  //       },
+  //     }),
+  //   ]
+  // },
 })

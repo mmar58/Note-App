@@ -47,9 +47,9 @@ import {
   TextDirection,
   Twitter,
   Underline,
-  Video,
+  Video
 } from "@/extensions";
-
+import { Ollama } from "@/extensions/Ollama";
 function convertBase64ToBlob(base64: string) {
   const arr = base64.split(",");
   const mime = arr[0].match(/:(.*?);/)![1];
@@ -81,6 +81,7 @@ const extensions = [
   FontSize,
   Bold,
   Italic,
+  Ollama,
   Underline,
   Strike,
   MoreMark,
@@ -255,7 +256,7 @@ function App() {
       />
 
       {/* CONTENT OUTPUT */}
-      {typeof content === "string" && (
+      {/* {typeof content === "string" && (
         <textarea
           style={{
             marginTop: 20,
@@ -264,7 +265,7 @@ function App() {
           readOnly
           value={content}
         />
-      )}
+      )} */}
     </div>
   );
 }

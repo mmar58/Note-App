@@ -8,6 +8,8 @@ import { BubbleMenuIframe } from '@/components/menus/components/BubbleMenuIframe
 import { ImageGif } from '@/extensions'
 import { BubbleMenuMermaid } from '@/components/menus/components/BubbleMenuMermaid'
 import { BubbleMenuTwitter } from '@/components/menus/components/BubbleMenuTwitter'
+import BubbleMenuOllama from '@/components/menus/components/BubbleMenuOllama';
+
 
 export interface BubbleMenuComponentProps {
   editor: Editor
@@ -25,8 +27,9 @@ export interface BubbleMenuComponentProps {
  */
 export function BubbleMenu({ editor, disabled, bubbleMenu }: BubbleMenuComponentProps) {
   const extensionsNames = editor.extensionManager.extensions.map(ext => ext.name)
-
+  // console.log(extensionsNames)
   const renderMenuItems = () => [
+    
     extensionsNames.includes('columns') && !bubbleMenu?.columnConfig?.hidden ? <ColumnsBubbleMenu key="columns" editor={editor} /> : null,
     extensionsNames.includes('table') && !bubbleMenu?.tableConfig?.hidden ? <TableBubbleMenu key="table" editor={editor} /> : null,
     extensionsNames.includes('link') && !bubbleMenu?.linkConfig?.hidden ? <BubbleMenuLink key="link" editor={editor} disabled={disabled} /> : null,
@@ -40,11 +43,12 @@ export function BubbleMenu({ editor, disabled, bubbleMenu }: BubbleMenuComponent
     extensionsNames.includes('twitter') && !bubbleMenu?.twitterConfig?.hidden ? <BubbleMenuTwitter key="twitter" editor={editor} disabled={disabled} /> : null,
     !bubbleMenu?.floatingMenuConfig?.hidden ? <ContentMenu key="content" editor={editor} disabled={disabled} /> : null,
     !bubbleMenu?.textConfig?.hidden ? <BubbleMenuText key="text" editor={editor} disabled={disabled} /> : null,
+    
   ]
 
-  if (bubbleMenu?.render) {
-    return bubbleMenu.render({ editor, disabled: disabled || false, bubbleMenu }, renderMenuItems())
-  }
+  // if (bubbleMenu?.render) {
+  //   return bubbleMenu.render({ editor, disabled: disabled || false, bubbleMenu }, renderMenuItems())
+  // }
 
-  return renderMenuItems().filter(Boolean)
+  return renderMenuItems()
 }

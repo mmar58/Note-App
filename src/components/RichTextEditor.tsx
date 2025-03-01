@@ -104,7 +104,7 @@ function RichTextEditor(props: RichTextEditorProps, ref: React.ForwardedRef<{ ed
       editor,
     }
   })
-
+  // console.log(props)
   useEffect(() => {
     document.documentElement.classList.toggle('dark', props.dark)
     themeActions.setTheme(props.dark ? 'dark' : 'light')
